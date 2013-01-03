@@ -154,7 +154,7 @@
 			regex = this.SplitRegexp;
 			if (! this.source == '') {
 				var source_split = rsplit(this.source, /\n/);
-				for (var i=0; i<source_split.length; i++) {
+				for (var i = 0, len = source_split.length; i < len; i++) {
 					var item = source_split[i];
 					this.scanline(item, regex, block);
 				}
@@ -163,7 +163,7 @@
 		scanline: function(line, regex, block) {
 			this.lines++;
 			var line_split = rsplit(line, regex);
-			for (var i=0; i<line_split.length; i++) {
+			for (var i = 0, len = line_split.length; i < len; i++) {
 				var token = line_split[i];
 				if (token != null) {
 					try { block(token, this) } 
@@ -179,7 +179,7 @@
 		this.script = "";
 		this.pre_cmd = pre_cmd;
 		this.post_cmd = post_cmd;
-		for (var i=0; i<this.pre_cmd.length; i++) {
+		for (var i = 0, len = this.pre_cmd.length; i < len; i++) {
 			this.push(pre_cmd[i]);
 		}
 	};
@@ -196,7 +196,7 @@
 		},
 		close: function() {
 			if (this.line.length > 0) {
-				for (var i=0; i<this.post_cmd.length; i++) {
+				for (var i = 0, len = this.post_cmd.length; i < len; i++) {
 					this.push(pre_cmd[i]);
 				}
 				this.script = this.script + this.line.join('; ');
@@ -322,7 +322,7 @@
 			catch(e) {
 				if (typeof JSLINT != 'undefined') {
 					JSLINT(this.out);
-					for (var i = 0; i < JSLINT.errors.length; i++) {
+					for (var i = 0, len = JSLINT.errors.length; i < len; i++) {
 						var error = JSLINT.errors[i];
 						if (error.reason != "Unnecessary semicolon.") {
 							error.line++;
@@ -391,7 +391,7 @@
 
 	EJSpeed.newRequest = function() {
 	   var factories = [function() { return new ActiveXObject("Msxml2.XMLHTTP"); },function() { return new XMLHttpRequest(); },function() { return new ActiveXObject("Microsoft.XMLHTTP"); }];
-		for (var i = 0; i < factories.length; i++) {
+		for (var i = 0, len = factories.length; i < len; i++) {
 			try {
 				var request = factories[i]();
 				if (request != null)  return request;
