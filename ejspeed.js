@@ -66,7 +66,6 @@
 		var template = new EJSpeed.Compiler(this.text, this.type);
 
 		template.compile(options, this.name);
-
 		
 		EJSpeed.update(this.name, this);
 		this.template = template;
