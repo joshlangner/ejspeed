@@ -26,13 +26,13 @@
 		}
 	}
 
-	EJS = function(options) {
+	EJSpeed = function(options) {
 		options = typeof options == "string" ? {view: options} : options
 		this.set_options(options);
 		if (options.precompiled) {
 			this.template = {};
 			this.template.process = options.precompiled;
-			EJS.update(this.name, this);
+			EJSpeed.update(this.name, this);
 			return;
 		}
 		if (options.element) {
@@ -49,34 +49,34 @@
 			this.name = options.element.id
 			this.type = '['
 		} else if (options.url) {
-			options.url = EJS.endExt(options.url, this.extMatch);
+			options.url = EJSpeed.endExt(options.url, this.extMatch);
 			this.name = this.name ? this.name : options.url;
 			var url = options.url
-			var template = EJS.get(this.name, this.cache);
+			var template = EJSpeed.get(this.name, this.cache);
 			if (template) return template;
-			if (template == EJS.INVALID_PATH) return null;
+			if (template == EJSpeed.INVALID_PATH) return null;
 			try {
-				this.text = EJS.request( url+(this.cache ? '' : '?'+Math.random() ));
+				this.text = EJSpeed.request( url+(this.cache ? '' : '?'+Math.random() ));
 			} catch(e){}
 
 			if (this.text == null) {
-				throw( {type: 'EJS', message: 'There is no template at '+url}  );
+				throw( {type: 'EJSpeed', message: 'There is no template at '+url}  );
 			}
 		}
-		var template = new EJS.Compiler(this.text, this.type);
+		var template = new EJSpeed.Compiler(this.text, this.type);
 
 		template.compile(options, this.name);
 
 		
-		EJS.update(this.name, this);
+		EJSpeed.update(this.name, this);
 		this.template = template;
 	};
 
-	EJS.prototype = {
+	EJSpeed.prototype = {
 		render : function(object, extra_helpers) {
 			object = object || {};
 			this._extra_helpers = extra_helpers;
-			var v = new EJS.Helpers(object, extra_helpers || {});
+			var v = new EJSpeed.Helpers(object, extra_helpers || {});
 			return this.template.process.call(object, object,v);
 		},
 		update : function(element, options) {
@@ -86,7 +86,7 @@
 			if (options == null) {
 				_template = this;
 				return function(object) {
-					EJS.prototype.update.call(_template, element, object)
+					EJSpeed.prototype.update.call(_template, element, object)
 				}
 			}
 			if (typeof options == 'string') {
@@ -95,9 +95,9 @@
 				_template = this;
 				params.onComplete = function(request) {
 					var object = eval( request.responseText )
-					EJS.prototype.update.call(_template, element, object)
+					EJSpeed.prototype.update.call(_template, element, object)
 				}
-				EJS.ajax_request(params)
+				EJSpeed.ajax_request(params)
 			} else {
 				element.innerHTML = this.render(options)
 			}
@@ -106,22 +106,22 @@
 			return this.template.out;
 		},
 		set_options : function(options) {
-			this.type = options.type || EJS.type;
-			this.cache = options.cache != null ? options.cache : EJS.cache;
+			this.type = options.type || EJSpeed.type;
+			this.cache = options.cache != null ? options.cache : EJSpeed.cache;
 			this.text = options.text || null;
 			this.name =  options.name || null;
-			this.ext = options.ext || EJS.ext;
+			this.ext = options.ext || EJSpeed.ext;
 			this.extMatch = new RegExp(this.ext.replace(/\./, '\.'));
 		}
 	};
 
-	EJS.endExt = function(path, match) {
+	EJSpeed.endExt = function(path, match) {
 		if (!path) return null;
 		match.lastIndex = 0
 		return path+ (match.test(path) ? '' : this.ext )
 	}
 
-	EJS.Scanner = function(source, left, right) {
+	EJSpeed.Scanner = function(source, left, right) {
 		
 		extend(this, {
 			left_delimiter: left +'%',
@@ -139,7 +139,7 @@
 		this.lines = 0;
 	};
 
-	EJS.Scanner.to_text = function(input) {
+	EJSpeed.Scanner.to_text = function(input) {
 		if (input == null || input === undefined)
 			return '';
 		if (input instanceof Date)
@@ -149,7 +149,7 @@
 		return '';
 	};
 
-	EJS.Scanner.prototype = {
+	EJSpeed.Scanner.prototype = {
 		scan: function(block) {
 			scanline = this.scanline;
 			regex = this.SplitRegexp;
@@ -168,13 +168,13 @@
 				var token = line_split[i];
 				if (token != null) {
 					try { block(token, this) } 
-					catch(e) { throw {type: 'EJS.Scanner', line: this.lines} }
+					catch(e) { throw {type: 'EJSpeed.Scanner', line: this.lines} }
 				}
 			}
 		}
 	};
 
-	EJS.Buffer = function(pre_cmd, post_cmd) {
+	EJSpeed.Buffer = function(pre_cmd, post_cmd) {
 		this.line = [];
 		this.pushIndex = 0;
 		this.script = "";
@@ -185,7 +185,7 @@
 		}
 	};
 
-	EJS.Buffer.prototype = {
+	EJSpeed.Buffer.prototype = {
 		indexVar: 0,		
 		push: function(cmd) {
 			this.line[this.indexVar++] = cmd;
@@ -206,7 +206,7 @@
 		}
 	};
 
-	EJS.Compiler = function(source, left) {
+	EJSpeed.Compiler = function(source, left) {
 		this.pre_cmd = ['var ___ViewO = [];'];
 		this.post_cmd = [];
 		this.source = ' ';	
@@ -234,17 +234,17 @@
 				throw left+' is not a supported deliminator';
 				break;
 		}
-		this.scanner = new EJS.Scanner(this.source, left, right);
+		this.scanner = new EJSpeed.Scanner(this.source, left, right);
 		this.out = '';
 	};
 
-	EJS.Compiler.prototype = {
+	EJSpeed.Compiler.prototype = {
 		compile: function(options, name) {
 			options = options || {};
 			this.out = '';
 			var put_cmd = "___ViewO.push";
 			var insert_cmd = put_cmd;
-			var buff = new EJS.Buffer(this.pre_cmd, this.post_cmd);		
+			var buff = new EJSpeed.Buffer(this.pre_cmd, this.post_cmd);		
 			var content = '';
 			
 			var clean = function(content) {
@@ -295,7 +295,7 @@
 									}
 									break;
 								case scanner.left_equal:
-									buff.push(insert_cmd + "((EJS.Scanner.to_text(" + content + ")))");
+									buff.push(insert_cmd + "((EJSpeed.Scanner.to_text(" + content + ")))");
 									break;
 							}
 							scanner.stag = null;
@@ -342,41 +342,41 @@
 		}
 	};
 
-	EJS.config = function(options) {
-		EJS.cache = options.cache != null ? options.cache : EJS.cache;
-		EJS.type = options.type != null ? options.type : EJS.type;
-		EJS.ext = options.ext != null ? options.ext : EJS.ext;
+	EJSpeed.config = function(options) {
+		EJSpeed.cache = options.cache != null ? options.cache : EJSpeed.cache;
+		EJSpeed.type = options.type != null ? options.type : EJSpeed.type;
+		EJSpeed.ext = options.ext != null ? options.ext : EJSpeed.ext;
 		
-		var templates_directory = EJS.templates_directory || {}; //nice and private container
-		EJS.templates_directory = templates_directory;
-		EJS.get = function(path, cache) {
+		var templates_directory = EJSpeed.templates_directory || {}; //nice and private container
+		EJSpeed.templates_directory = templates_directory;
+		EJSpeed.get = function(path, cache) {
 			if (cache == false) return null;
 			if (templates_directory[path]) return templates_directory[path];
 			return null;
 		};
 		
-		EJS.update = function(path, template) { 
+		EJSpeed.update = function(path, template) { 
 			if (path == null) return;
 			templates_directory[path] = template;
 		};
 		
-		EJS.INVALID_PATH =  -1;
+		EJSpeed.INVALID_PATH =  -1;
 	};
 
 	// DEFAULT CONFIG
-	EJS.config({cache: true, type: '<', ext: '.html'}); 
+	EJSpeed.config({cache: true, type: '<', ext: '.html'}); 
 
-	EJS.Helpers = function(data, extras) {
+	EJSpeed.Helpers = function(data, extras) {
 		this._data = data;
 		this._extras = extras;
 		extend(this, extras);
 	};
 
-	EJS.Helpers.prototype = {
+	EJSpeed.Helpers.prototype = {
 		view: function(options, data, helpers) {
 			if (!helpers) helpers = this._extras
 			if (!data) data = this._data;
-			return new EJS(options).render(data, helpers);
+			return new EJSpeed(options).render(data, helpers);
 		},
 		to_text: function(input, null_text) {
 			if (input == null || input === undefined) return null_text || '';
@@ -386,11 +386,11 @@
 		},
 		include: function(options, data) {
 			if (!data) data = this._data;
-			return new EJS({url: options}).render(data);
+			return new EJSpeed({url: options}).render(data);
 		}
 	};
 
-	EJS.newRequest = function() {
+	EJSpeed.newRequest = function() {
 	   var factories = [function() { return new ActiveXObject("Msxml2.XMLHTTP"); },function() { return new XMLHttpRequest(); },function() { return new ActiveXObject("Microsoft.XMLHTTP"); }];
 		for (var i = 0; i < factories.length; i++) {
 			try {
@@ -401,8 +401,8 @@
 		}
 	};
 
-	EJS.request = function(path) {
-	   var request = new EJS.newRequest()
+	EJSpeed.request = function(path) {
+	   var request = new EJSpeed.newRequest()
 	   request.open("GET", path, false);
 	   
 	   try {request.send(null);}
@@ -413,10 +413,10 @@
 	   return request.responseText
 	};
 
-	EJS.ajax_request = function(params) {
+	EJSpeed.ajax_request = function(params) {
 		params.method = ( params.method ? params.method : 'GET')
 		
-		var request = new EJS.newRequest();
+		var request = new EJSpeed.newRequest();
 		request.onreadystatechange = function() {
 			if (request.readyState == 4) {
 				if (request.status == 200) { params.onComplete(request) } 
