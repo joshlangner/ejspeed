@@ -191,17 +191,18 @@
 
 	EJSpeed.Buffer = function(pre_cmd, post_cmd) {
 		this.line = [];
+		this.pushIndex = 0;
 		this.script = "";
 		this.pre_cmd = pre_cmd;
 		this.post_cmd = post_cmd;
 		for (var i = 0, len = this.pre_cmd.length; i < len; i++) {
-			this.directAssign(pre_cmd[i]);
+			this.push(pre_cmd[i]);
 		}
 	};
 
 	EJSpeed.Buffer.prototype = {
 		indexVar: 0,		
-		directAssign: function(cmd) {
+		push: function(cmd) {
 			this.line[this.indexVar++] = cmd;
 		},
 		cr: function() {
@@ -212,7 +213,7 @@
 		close: function() {
 			if (this.line.length > 0) {
 				for (var i = 0, len = this.post_cmd.length; i < len; i++) {
-					this.directAssign(pre_cmd[i]);
+					this.push(pre_cmd[i]);
 				}
 				this.script = this.script + this.line.join('; ');
 				line = null;
@@ -221,7 +222,7 @@
 	};
 
 	EJSpeed.Compiler = function(source) {
-		this.pre_cmd = ['var ___ViewO = []; var View0Index = 0;'];
+		this.pre_cmd = ['var ___ViewO = [];'];
 		this.post_cmd = [];
 		this.source = ' ';	
 		if (source != null) {
@@ -244,7 +245,7 @@
 		compile: function(options, name) {
 			options = options || {};
 			this.out = '';
-			var put_cmd = "___ViewO[View0Index++] = ";
+			var put_cmd = "___ViewO.push";
 			var insert_cmd = put_cmd;
 			var buff = new EJSpeed.Buffer(this.pre_cmd, this.post_cmd);		
 			var content = '';
@@ -261,7 +262,7 @@
 					switch(token) {
 						case '\n':
 							content = content + "\n";
-							buff.directAssign(put_cmd + '"' + clean(content) + '";');
+							buff.push(put_cmd + '("' + clean(content) + '");');
 							buff.cr();
 							content = '';
 							break;
@@ -270,7 +271,7 @@
 						case scanner.left_comment:
 							scanner.stag = token;
 							if (content.length > 0) {
-								buff.directAssign(put_cmd + '"' + clean(content) + '"');
+								buff.push(put_cmd + '("' + clean(content) + '")');
 							}
 							content = '';
 							break;
@@ -289,15 +290,15 @@
 								case scanner.left_delimiter:
 									if (content[content.length - 1] == '\n') {
 										content = chop(content);
-										buff.directAssign(content);
+										buff.push(content);
 										buff.cr();
 									}
 									else {
-										buff.directAssign(content);
+										buff.push(content);
 									}
 									break;
 								case scanner.left_equal:
-									buff.directAssign(insert_cmd + "(EJSpeed.Scanner.to_text(" + content + "))");
+									buff.push(insert_cmd + "((EJSpeed.Scanner.to_text(" + content + ")))");
 									break;
 							}
 							scanner.stag = null;
@@ -314,7 +315,7 @@
 			});
 
 			if (content.length > 0) {
-				buff.directAssign(put_cmd + '"' + clean(content) + '"');
+				buff.push(put_cmd + '("' + clean(content) + '")');
 			}
 
 			buff.close();
