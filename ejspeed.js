@@ -1,11 +1,14 @@
 (function() {
-  var rsplit = function(string, regex) {
+
+  	var rsplit = function(string, regex) {
+  		
 		var result = regex.exec(string),
 			retArr = [], 
 			first_idx, 
 			last_idx, 
 			first_bit,
 			rsplit_idx = 0;
+
 		while (result != null) {
 			first_idx = result.index; 
 			last_idx = regex.lastIndex;
@@ -16,16 +19,20 @@
 			}		
 			retArr[rsplit_idx++] = result[0];
 			string = string.slice(result[0].length);
-			result = regex.exec(string);	
+			result = regex.exec(string);
+				
 		}
+
 		if (! string == '') {
 			retArr[rsplit_idx++] = string;
 		}
 		return retArr;
 	}
+
 	var chop =  function(string) {
 		return string.substr(0, string.length - 1);
 	}
+
 	var extend = function(d, s) {
 		for(var n in s) {
 			if (s.hasOwnProperty(n))  d[n] = s[n];
@@ -126,19 +133,21 @@
 		return path + (match.test(path) ? '' : this.ext );
 	}
 
-	EJSpeed.Scanner = function(source, left, right) {
+	EJSpeed.Scanner = function(source) {
 		
+		//console.log("left is: "+left+ ", and right is: " + right)
+
 		extend(this, {
-			left_delimiter: left +'%',
-			right_delimiter: '%'+right,
-			double_left: left+'%%',
-			double_right: '%%'+right,
-			left_equal: left+'%=',
-			left_comment: left+'%#'
+			left_delimiter: '<%',
+			right_delimiter: '%>',
+			double_left: '<%%',
+			double_right: '%%>',
+			left_equal: '<%=',
+			left_comment: '<%#'
 		 })
 
-		this.SplitRegexp = left=='[' ? /(\[%%)|(%%\])|(\[%=)|(\[%#)|(\[%)|(%\]\n)|(%\])|(\n)/ : new RegExp('('+this.double_left+')|(%%'+this.double_right+')|('+this.left_equal+')|('+this.left_comment+')|('+this.left_delimiter+')|('+this.right_delimiter+'\n)|('+this.right_delimiter+')|(\n)') ;
-		
+		this.SplitRegexp = new RegExp('(<%%)|(%%>)|(<%=)|(<%#)|(<%)|(%>\n)|(%>)|(\n)');
+
 		this.source = source;
 		this.stag = null;
 		this.lines = 0;
@@ -184,18 +193,18 @@
 
 	EJSpeed.Buffer = function(pre_cmd, post_cmd) {
 		this.line = [];
-		this.pushIndex = 0;
 		this.script = "";
 		this.pre_cmd = pre_cmd;
 		this.post_cmd = post_cmd;
 		for (var i = 0, len = this.pre_cmd.length; i < len; i++) {
-			this.push(pre_cmd[i]);
+			console.log(this)
+			this.directAssign(pre_cmd[i]);
 		}
 	};
 
 	EJSpeed.Buffer.prototype = {
 		indexVar: 0,		
-		push: function(cmd) {
+		directAssign: function(cmd) {
 			this.line[this.indexVar++] = cmd;
 		},
 		cr: function() {
@@ -206,7 +215,7 @@
 		close: function() {
 			if (this.line.length > 0) {
 				for (var i = 0, len = this.post_cmd.length; i < len; i++) {
-					this.push(pre_cmd[i]);
+					this.directAssign(pre_cmd[i]);
 				}
 				this.script = this.script + this.line.join('; ');
 				line = null;
@@ -214,8 +223,8 @@
 		}
 	};
 
-	EJSpeed.Compiler = function(source, left) {
-		this.pre_cmd = ['var ___ViewO = [];'];
+	EJSpeed.Compiler = function(source) {
+		this.pre_cmd = ['var ___ViewO = []; var View0Index = 0;'];
 		this.post_cmd = [];
 		this.source = ' ';	
 		if (source != null) {
@@ -230,19 +239,7 @@
 				this.source = "";
 			}
 		}
-		left = left || '<';
-		var right = '>';
-		switch(left) {
-			case '[':
-				right = ']';
-				break;
-			case '<':
-				break;
-			default:
-				throw left+' is not a supported deliminator';
-				break;
-		}
-		this.scanner = new EJSpeed.Scanner(this.source, left, right);
+		this.scanner = new EJSpeed.Scanner(this.source);
 		this.out = '';
 	};
 
@@ -250,7 +247,7 @@
 		compile: function(options, name) {
 			options = options || {};
 			this.out = '';
-			var put_cmd = "___ViewO.push";
+			var put_cmd = "___ViewO[View0Index++] = ";
 			var insert_cmd = put_cmd;
 			var buff = new EJSpeed.Buffer(this.pre_cmd, this.post_cmd);		
 			var content = '';
@@ -267,7 +264,7 @@
 					switch(token) {
 						case '\n':
 							content = content + "\n";
-							buff.push(put_cmd + '("' + clean(content) + '");');
+							buff.directAssign(put_cmd + '"' + clean(content) + '";');
 							buff.cr();
 							content = '';
 							break;
@@ -276,7 +273,7 @@
 						case scanner.left_comment:
 							scanner.stag = token;
 							if (content.length > 0) {
-								buff.push(put_cmd + '("' + clean(content) + '")');
+								buff.directAssign(put_cmd + '"' + clean(content) + '"');
 							}
 							content = '';
 							break;
@@ -295,15 +292,15 @@
 								case scanner.left_delimiter:
 									if (content[content.length - 1] == '\n') {
 										content = chop(content);
-										buff.push(content);
+										buff.directAssign(content);
 										buff.cr();
 									}
 									else {
-										buff.push(content);
+										buff.directAssign(content);
 									}
 									break;
 								case scanner.left_equal:
-									buff.push(insert_cmd + "((EJSpeed.Scanner.to_text(" + content + ")))");
+									buff.directAssign(insert_cmd + "(EJSpeed.Scanner.to_text(" + content + "))");
 									break;
 							}
 							scanner.stag = null;
@@ -320,7 +317,7 @@
 			});
 
 			if (content.length > 0) {
-				buff.push(put_cmd + '("' + clean(content) + '")');
+				buff.directAssign(put_cmd + '"' + clean(content) + '"');
 			}
 
 			buff.close();
