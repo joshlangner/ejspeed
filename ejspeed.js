@@ -1,28 +1,34 @@
 (function() {
   var rsplit = function(string, regex) {
-		var result = regex.exec(string),retArr = new Array(), first_idx, last_idx, first_bit;
+		var result = regex.exec(string),
+			retArr = [], 
+			first_idx, 
+			last_idx, 
+			first_bit,
+			rsplit_idx = 0;
 		while (result != null) {
-			first_idx = result.index; last_idx = regex.lastIndex;
+			first_idx = result.index; 
+			last_idx = regex.lastIndex;
 			if ((first_idx) != 0) {
 				first_bit = string.substring(0,first_idx);
-				retArr.push(string.substring(0,first_idx));
+				retArr[rsplit_idx++] = string.substring(0,first_idx);
 				string = string.slice(first_idx);
 			}		
-			retArr.push(result[0]);
+			retArr[rsplit_idx++] = result[0];
 			string = string.slice(result[0].length);
 			result = regex.exec(string);	
 		}
 		if (! string == '') {
-			retArr.push(string);
+			retArr[rsplit_idx++] = string;
 		}
-			return retArr;
-		}
+		return retArr;
+	}
 	var chop =  function(string) {
 		return string.substr(0, string.length - 1);
 	}
 	var extend = function(d, s) {
 		for(var n in s) {
-			if (s.hasOwnProperty(n))  d[n] = s[n]
+			if (s.hasOwnProperty(n))  d[n] = s[n];
 		}
 	}
 
@@ -38,16 +44,16 @@
 		if (options.element) {
 			if (typeof options.element == 'string') {
 				var name = options.element
-				options.element = document.getElementById( options.element)
-				if (options.element == null) throw name+'does not exist!'
+				options.element = document.getElementById( options.element);
+				if (options.element == null) throw name+'does not exist!';
 			}
 			if (options.element.value) {
-				this.text = options.element.value
+				this.text = options.element.value;
 			}else{
-				this.text = options.element.innerHTML
+				this.text = options.element.innerHTML;
 			}
-			this.name = options.element.id
-			this.type = '['
+			this.name = options.element.id;
+			this.type = '[';
 		} else if (options.url) {
 			options.url = EJSpeed.endExt(options.url, this.extMatch);
 			this.name = this.name ? this.name : options.url;
@@ -80,25 +86,25 @@
 		},
 		update : function(element, options) {
 			if (typeof element == 'string') {
-				element = document.getElementById(element)
+				element = document.getElementById(element);
 			}
 			if (options == null) {
 				_template = this;
 				return function(object) {
-					EJSpeed.prototype.update.call(_template, element, object)
+					EJSpeed.prototype.update.call(_template, element, object);
 				}
 			}
 			if (typeof options == 'string') {
-				params = {}
-				params.url = options
+				params = {};
+				params.url = options;
 				_template = this;
 				params.onComplete = function(request) {
-					var object = eval( request.responseText )
-					EJSpeed.prototype.update.call(_template, element, object)
+					var object = eval( request.responseText );
+					EJSpeed.prototype.update.call(_template, element, object);
 				}
-				EJSpeed.ajax_request(params)
+				EJSpeed.ajax_request(params);
 			} else {
-				element.innerHTML = this.render(options)
+				element.innerHTML = this.render(options);
 			}
 		},
 		out : function() {
@@ -116,8 +122,8 @@
 
 	EJSpeed.endExt = function(path, match) {
 		if (!path) return null;
-		match.lastIndex = 0
-		return path+ (match.test(path) ? '' : this.ext )
+		match.lastIndex = 0;
+		return path + (match.test(path) ? '' : this.ext );
 	}
 
 	EJSpeed.Scanner = function(source, left, right) {
@@ -139,12 +145,15 @@
 	};
 
 	EJSpeed.Scanner.to_text = function(input) {
-		if (input == null || input === undefined)
+		if (input == null || input === undefined) {
 			return '';
-		if (input instanceof Date)
+		}
+		if (input instanceof Date) {
 			return input.toDateString();
-		if (input.toString) 
+		}
+		if (input.toString) {
 			return input.toString();
+		}
 		return '';
 	};
 
