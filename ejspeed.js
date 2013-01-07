@@ -134,8 +134,6 @@
 	}
 
 	EJSpeed.Scanner = function(source) {
-		
-		//console.log("left is: "+left+ ", and right is: " + right)
 
 		extend(this, {
 			left_delimiter: '<%',
@@ -197,7 +195,6 @@
 		this.pre_cmd = pre_cmd;
 		this.post_cmd = post_cmd;
 		for (var i = 0, len = this.pre_cmd.length; i < len; i++) {
-			console.log(this)
 			this.directAssign(pre_cmd[i]);
 		}
 	};
