@@ -220,7 +220,7 @@
 	};
 
 	EJSpeed.Compiler = function(source) {
-		this.pre_cmd = ['var $d = this; var ___ViewO = [];'];
+		this.pre_cmd = ['var c = this; var ___ViewO = [];'];
 		this.post_cmd = [];
 		this.source = ' ';	
 		if (source != null) {
