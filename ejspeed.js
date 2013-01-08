@@ -89,7 +89,7 @@
 			object = object || {};
 			this._extra_helpers = extra_helpers;
 			var v = new EJSpeed.Helpers(object, extra_helpers || {});
-			return this.template.process.call(object, object,v);
+			return this.template.process.call(object, object, v);
 		},
 		update : function(element, options) {
 			if (typeof element == 'string') {
@@ -191,19 +191,17 @@
 
 	EJSpeed.Buffer = function(pre_cmd, post_cmd) {
 		this.line = [];
-		this.pushIndex = 0;
 		this.script = "";
 		this.pre_cmd = pre_cmd;
 		this.post_cmd = post_cmd;
 		for (var i = 0, len = this.pre_cmd.length; i < len; i++) {
-			this.push(pre_cmd[i]);
+			this.directAssign(pre_cmd[i]);
 		}
 	};
 
-	EJSpeed.Buffer.prototype = {
-		indexVar: 0,		
-		push: function(cmd) {
-			this.line[this.indexVar++] = cmd;
+	EJSpeed.Buffer.prototype = {		
+		directAssign: function(cmd) {
+			this.line[this.line.length] = cmd;
 		},
 		cr: function() {
 			this.script = this.script + this.line.join('; ');
@@ -213,7 +211,7 @@
 		close: function() {
 			if (this.line.length > 0) {
 				for (var i = 0, len = this.post_cmd.length; i < len; i++) {
-					this.push(pre_cmd[i]);
+					this.directAssign(pre_cmd[i]);
 				}
 				this.script = this.script + this.line.join('; ');
 				line = null;
@@ -245,9 +243,9 @@
 		compile: function(options, name) {
 			options = options || {};
 			this.out = '';
-			var put_cmd = "___ViewO.push";
+			var put_cmd = "___ViewO[___ViewO.length]=";
 			var insert_cmd = put_cmd;
-			var buff = new EJSpeed.Buffer(this.pre_cmd, this.post_cmd);		
+			var buff = new EJSpeed.Buffer(this.pre_cmd, this.post_cmd);
 			var content = '';
 			
 			var clean = function(content) {
@@ -262,7 +260,7 @@
 					switch(token) {
 						case '\n':
 							content = content + "\n";
-							buff.push(put_cmd + '("' + clean(content) + '");');
+							buff.directAssign(put_cmd + '"' + clean(content) + '";');
 							buff.cr();
 							content = '';
 							break;
@@ -271,7 +269,7 @@
 						case scanner.left_comment:
 							scanner.stag = token;
 							if (content.length > 0) {
-								buff.push(put_cmd + '("' + clean(content) + '")');
+								buff.directAssign(put_cmd + '"' + clean(content) + '";');
 							}
 							content = '';
 							break;
@@ -290,15 +288,15 @@
 								case scanner.left_delimiter:
 									if (content[content.length - 1] == '\n') {
 										content = chop(content);
-										buff.push(content);
+										buff.directAssign(content);
 										buff.cr();
 									}
 									else {
-										buff.push(content);
+										buff.directAssign(content);
 									}
 									break;
 								case scanner.left_equal:
-									buff.push(insert_cmd + "((EJSpeed.Scanner.to_text(" + content + ")))");
+									buff.directAssign(insert_cmd + "(EJSpeed.Scanner.to_text(" + content + "));");
 									break;
 							}
 							scanner.stag = null;
@@ -315,13 +313,14 @@
 			});
 
 			if (content.length > 0) {
-				buff.push(put_cmd + '("' + clean(content) + '")');
+				buff.directAssign(put_cmd + '"' + clean(content) + '"');
 			}
 
 			buff.close();
 			this.out = buff.script + ";";
 
-			var to_be_evaled = '/*'+name+'*/this.process = function(_CONTEXT,_VIEW) { try { with(_VIEW) { with (_CONTEXT) {'+this.out+" return ___ViewO.join(''); }}}catch(e){e.lineNumber=null;throw e;}};";
+			var to_be_evaled = 'this.process = function(_CONTEXT,_VIEW) { try { with(_VIEW) { with (_CONTEXT) {'+this.out+";console.log(_CONTEXT); return ___ViewO.join(''); }}}catch(e){e.lineNumber=null;throw e;}};";
+
 			try { eval(to_be_evaled); } 
 			catch(e) {
 				if (typeof JSLINT != 'undefined') {
@@ -350,7 +349,7 @@
 		EJSpeed.type = options.type != null ? options.type : EJSpeed.type;
 		EJSpeed.ext = options.ext != null ? options.ext : EJSpeed.ext;
 		
-		var templates_directory = EJSpeed.templates_directory || {}; //nice and private container
+		var templates_directory = EJSpeed.templates_directory || {};
 		EJSpeed.templates_directory = templates_directory;
 		EJSpeed.get = function(path, cache) {
 			if (cache == false) return null;
@@ -366,7 +365,6 @@
 		EJSpeed.INVALID_PATH =  -1;
 	};
 
-	// DEFAULT CONFIG
 	EJSpeed.config({cache: true, type: '<', ext: '.html'}); 
 
 	EJSpeed.Helpers = function(data, extras) {
