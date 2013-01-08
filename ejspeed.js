@@ -256,18 +256,12 @@
 			};
 
 			this.scanner.scan(function(token, scanner) {
-				var ts = '';
 				if (scanner.stag == null) {
 					switch(token) {
 						case '\n':
-							content += "\n";
-							ts += put_cmd;
-							ts += '"';
-							ts += clean(content);
-							ts += '";';
-							buff.directAssign(ts);
+							content = content + "\n";
+							buff.directAssign(put_cmd + '"' + clean(content) + '";');
 							buff.cr();
-							ts = ''
 							content = '';
 							break;
 						case scanner.left_delimiter:
@@ -275,12 +269,7 @@
 						case scanner.left_comment:
 							scanner.stag = token;
 							if (content.length > 0) {
-								ts += put_cmd;
-								ts += '"';
-								ts += clean(content);
-								ts += '";';
-								buff.directAssign(ts);
-								ts = ''
+								buff.directAssign(put_cmd + '"' + clean(content) + '";');
 							}
 							content = '';
 							break;
@@ -307,12 +296,7 @@
 									}
 									break;
 								case scanner.left_equal:
-									ts += insert_cmd;
-									ts += "(EJSpeed.Scanner.to_text(";
-									ts += content;
-									ts += "));";
-									buff.directAssign(ts);
-									ts = ''
+									buff.directAssign(insert_cmd + "(EJSpeed.Scanner.to_text(" + content + "));");
 									break;
 							}
 							scanner.stag = null;
@@ -327,14 +311,9 @@
 					}
 				}
 			});
-			var ts = '';
-			if (content.length > 0) {				
-				ts += put_cmd;
-				ts += '"';
-				ts += clean(content);
-				ts += '"';
-				buff.directAssign(ts);
-				ts = ''
+
+			if (content.length > 0) {
+				buff.directAssign(put_cmd + '"' + clean(content) + '"');
 			}
 
 			buff.close();
