@@ -319,7 +319,7 @@
 			buff.close();
 			this.out = buff.script + ";";
 
-			var to_be_evaled = 'this.process = function(_CONTEXT,_VIEW) { try { with(_VIEW) { with (_CONTEXT) {'+this.out+";console.log(_CONTEXT); return ___ViewO.join(''); }}}catch(e){e.lineNumber=null;throw e;}};";
+			var to_be_evaled = 'this.process = function(_CONTEXT,_VIEW) { try { with(_VIEW) { with (_CONTEXT) {'+this.out+"; return ___ViewO.join(''); }}}catch(e){e.lineNumber=null;throw e;}};";
 
 			try { eval(to_be_evaled); } 
 			catch(e) {
