@@ -86,10 +86,10 @@
 
 	EJSpeed.prototype = {
 		render : function(object, extra_helpers) {
-			object = object || {};
+			object = object || {nodata:true};
 			this._extra_helpers = extra_helpers;
-			var v = new EJSpeed.Helpers(object, extra_helpers || {});
-			return this.template.process.call(object, object, v);
+			object.fn = new EJSpeed.Helpers(object, extra_helpers || {});
+			return this.template.process.call(object, object);
 		},
 		update : function(element, options) {
 			if (typeof element == 'string') {
@@ -319,7 +319,7 @@
 			buff.close();
 			this.out = buff.script + ";";
 
-			var to_be_evaled = 'this.process = function(_CONTEXT,_VIEW) { try { with(_VIEW) { with (_CONTEXT) {'+this.out+"; return ___ViewO.join(''); }}}catch(e){e.lineNumber=null;throw e;}};";
+			var to_be_evaled = 'this.process = function(ejs_context) { try { '+this.out+"; return ___ViewO.join(''); }catch(e){e.lineNumber=null;throw e;}};";
 
 			try { eval(to_be_evaled); } 
 			catch(e) {
