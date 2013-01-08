@@ -88,8 +88,8 @@
 		render : function(object, extra_helpers) {
 			object = object || {nodata:true};
 			this._extra_helpers = extra_helpers;
-			object.fn = new EJSpeed.Helpers(object, extra_helpers || {});
-			return this.template.process.call(object, object);
+			helper_fns = new EJSpeed.Helpers(object, extra_helpers || {});
+			return this.template.process.call(object, object, helper_fns);
 		},
 		update : function(element, options) {
 			if (typeof element == 'string') {
@@ -220,7 +220,7 @@
 	};
 
 	EJSpeed.Compiler = function(source) {
-		this.pre_cmd = ['var c = this; var ___ViewO = [];'];
+		this.pre_cmd = ['var ___ViewO = [];'];
 		this.post_cmd = [];
 		this.source = ' ';	
 		if (source != null) {
@@ -319,7 +319,7 @@
 			buff.close();
 			this.out = buff.script + ";";
 
-			var to_be_evaled = 'this.process = function(ejs_context) { try { '+this.out+"; return ___ViewO.join(''); }catch(e){e.lineNumber=null;throw e;}};";
+			var to_be_evaled = 'this.process = function(Data, Fn) { try { var Data = Data||{}, Fn = Fn||{};'+this.out+"; return ___ViewO.join(''); }catch(e){e.lineNumber=null;throw e;}};";
 
 			try { eval(to_be_evaled); } 
 			catch(e) {
