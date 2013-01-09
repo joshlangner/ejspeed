@@ -256,58 +256,42 @@
 			};
 
 			this.scanner.scan(function(token, scanner) {
-				if (scanner.stag == null) {
-					switch(token) {
-						case '\n':
-							content = content + "\n";
+				if (scanner.stag == null) {					
+					if (token == '\n') {
+						content += '\n';
+						buff.directAssign(put_cmd + '"' + clean(content) + '";');
+						buff.cr();
+						content = '';
+					} else if (token == scanner.left_delimiter || token == scanner.left_equal || token == scanner.left_comment) {
+						scanner.stag = token;
+						if (content.length > 0) {
 							buff.directAssign(put_cmd + '"' + clean(content) + '";');
-							buff.cr();
-							content = '';
-							break;
-						case scanner.left_delimiter:
-						case scanner.left_equal:
-						case scanner.left_comment:
-							scanner.stag = token;
-							if (content.length > 0) {
-								buff.directAssign(put_cmd + '"' + clean(content) + '";');
-							}
-							content = '';
-							break;
-						case scanner.double_left:
-							content = content + scanner.left_delimiter;
-							break;
-						default:
-							content = content + token;
-							break;
+						}
+						content = '';
+					} else if (token == scanner.double_left) {
+						content = content + scanner.left_delimiter;
+					} else {
+						content += token;
 					}
-				}
-				else {
-					switch(token) {
-						case scanner.right_delimiter:
-							switch(scanner.stag) {
-								case scanner.left_delimiter:
-									if (content[content.length - 1] == '\n') {
-										content = chop(content);
-										buff.directAssign(content);
-										buff.cr();
-									}
-									else {
-										buff.directAssign(content);
-									}
-									break;
-								case scanner.left_equal:
-									buff.directAssign(insert_cmd + "(EJSpeed.Scanner.to_text(" + content + "));");
-									break;
+				} else {
+					if (token == scanner.right_delimiter) {
+						if (scanner.stag == scanner.left_delimiter) {
+							if (content[content.length - 1] == '\n') {
+								content = chop(content);
+								buff.directAssign(content);
+								buff.cr();
+							} else {
+								buff.directAssign(content);
 							}
-							scanner.stag = null;
-							content = '';
-							break;
-						case scanner.double_right:
-							content = content + scanner.right_delimiter;
-							break;
-						default:
-							content = content + token;
-							break;
+						} else if (scanner.stag == scanner.left_equal) {
+							buff.directAssign(insert_cmd + "(EJSpeed.Scanner.to_text(" + content + "));");
+						}					
+						scanner.stag = null;
+						content = '';
+					} else if (token == scanner.double_right) {
+						content = content + scanner.right_delimiter;
+					} else {
+						content = content + token;
 					}
 				}
 			});
