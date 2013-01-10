@@ -109,6 +109,8 @@ Full JS syntax support means being able to use other libraries within your preco
 
 ## Options
 
-*Disable Caching*
+#### Disable Caching
 In your Javascript code before calling `new EJSpeed()`, add the following config option:
-`EJSpeed.config({cache: false})`
+```javascript
+EJSpeed.config({cache: false})
+```
