@@ -33,9 +33,9 @@ A SPEEDY Javascript templating engine based on EJS (http://embeddedjs.com/), ins
 *JSON data:*
 ```json
 {
-    "theJSON": {
+    "theWorld": {
         "title": "Hello World",
-        "continents": [
+        "regions": [
             "Asia",
             "Africa",
             "North America",
@@ -52,8 +52,8 @@ A SPEEDY Javascript templating engine based on EJS (http://embeddedjs.com/), ins
 ```html
 <h1><%= Data.title %></h1>
 <ul>
-  <% for (var i, len = Data.continents.length; i < len; i++) { %>
-		<li><%= Data.continents[i] %></li>
+  <% for (var i, len = Data.regions.length; i < len; i++) { %>
+		<li><%= Data.regions[i] %></li>
 	<% } %>
 </ul>
 ```
@@ -68,7 +68,7 @@ A SPEEDY Javascript templating engine based on EJS (http://embeddedjs.com/), ins
 *default.js:*
 ```javascript
 // Using jQuery
-$('#stage').html(new EJSpeed ({url: 'template.html'}).render(theJSON));
+$('#stage').html(new EJSpeed ({url: 'template.html'}).render(theWorld));
 ```
 
 
@@ -81,8 +81,8 @@ EJSpeed has full support for including partials. Partials will automatically inh
 *partial.html:*
 ```html
 <ul>
-	<% for (var i, len = Data.continents.length; i < len; i++) { %>
-		<li><%= Data.continents[i] %></li>
+	<% for (var i, len = Data.regions.length; i < len; i++) { %>
+		<li><%= Data.regions[i] %></li>
 	<% } %>
 </ul>
 ```
@@ -94,11 +94,33 @@ EJSpeed has full support for including partials. Partials will automatically inh
 <%= Fn.include('partial.html') %>
 ```
 
-*template-with-partial-plus-context.html:*
+*Additional JSON data:*
+```json
+{
+    "middleEarth": {
+        "title": "Hello Middle Earth",
+        "regions": [
+            "Eregion",
+            "Fangorn",
+            "Gondor",
+            "Isengard",
+            "Lothlorien",
+            "Mirkwood",
+            "Mordor",
+            "Moria",
+            "Numenor",
+            "Rohan"
+        ]
+    }
+}
+```
+
+*template-with-partials-and-separate-contexts.html:*
 ```html
-<!-- partial inheriting parent context -->
+<!-- same partial with different dataset applied -->
 <h1><%= Data.title %></h1>
-<%= Fn.include('partial.html',differentJSON) %>
+<%= Fn.include('partial.html',theWorld) %>
+<%= Fn.include('partial.html',middleEarth) %>
 ```
 
 
@@ -112,8 +134,8 @@ Full JS syntax support means being able to use other libraries within your preco
 ```html
 <h1><%= Data.title %></h1>
 <ul>
-	<% _.each(Data.continents, function(continent) { %>
-		<li><%= continent %></li>
+	<% _.each(Data.regions, function(region) { %>
+		<li><%= region %></li>
 	<% }) %>
 </ul>
 ```
