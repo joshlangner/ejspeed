@@ -20,10 +20,10 @@ A SPEEDY Javascript templating engine based on EJS (http://embeddedjs.com/), ins
 ## Other Features
 
 * Partials support via "Include", including caching of partials
+* Ability to set data context within partials
 
 ### On the Roadmap
 
-* Add the ability to set Data context on Partials
 * Add an option to make logicless - boost performance 2x-5x or more, but lose the capability to execute JS code
 * Make it strict-mode compatible
 * Add more robust, per-line-per-template logging
@@ -74,15 +74,9 @@ $('#stage').html(new EJSpeed ({url: 'template.html'}).render(theJSON));
 
 ## Includes & Partials
 
-EJSpeed has full support for including partials. Partials will automatically inherit the data contexts of their parents.
+EJSpeed has full support for including partials. Partials will automatically inherit the data contexts of their parents, or you can explicitly set what data is scoped within the partial.
 
 #### Example:
-
-*template-with-include.html:*
-```html
-<h1><%= Data.title %></h1>
-<%= Fn.include('partial.html') %>
-```
 
 *partial.html:*
 ```html
@@ -92,6 +86,21 @@ EJSpeed has full support for including partials. Partials will automatically inh
 	<% } %>
 </ul>
 ```
+
+*template-with-partial.html:*
+```html
+<!-- partial inheriting parent context -->
+<h1><%= Data.title %></h1>
+<%= Fn.include('partial.html') %>
+```
+
+*template-with-partial-plus-context.html:*
+```html
+<!-- partial inheriting parent context -->
+<h1><%= Data.title %></h1>
+<%= Fn.include('partial.html',differentJSON) %>
+```
+
 
 ## Full JS syntax support
 
