@@ -12,12 +12,12 @@ A SPEEDY Javascript templating engine based on EJS (http://embeddedjs.com/), ins
 
 ## Logical
 
-* Logic. As in full Javascript syntax (if you dare)
-* It's recognizable by programmers coming from .NET, Java and even PHP
-* Distinguishes between precompiled and post-compiled contexts
+* Don't learn another syntax. Executes vanilla Javascript, or use helper libraries like Underscore or Moment.js
+* Formatting is immediately recognizable by programmers coming from .NET, Java and even PHP
+* Provides clear distinction between precompiled (pre-rendered) and post-compiled (bound in the DOM) contexts
 * Built-in template caching
 
-## Featured
+## Other Features
 
 * Partials support via "Include", including caching of partials
 
