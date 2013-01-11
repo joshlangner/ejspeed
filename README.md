@@ -23,7 +23,8 @@ A SPEEDY Javascript templating engine based on EJS (http://embeddedjs.com/), ins
 
 ### On the Roadmap
 
-* Add an option to make logicless - losing the capability to execute JS code, but will boost performance 2x-5x or more
+* Add the ability to set Data context on Includes
+* Add an option to make logicless - boost performance 2x-5x or more, but lose the capability to execute JS code
 * Make it strict-mode compatible
 * Add more robust, per-line-per-template logging
 
