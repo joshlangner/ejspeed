@@ -12,7 +12,7 @@ A SPEEDY Javascript templating engine based on EJS (http://embeddedjs.com/), ins
 
 ## Logical
 
-* Don't learn another syntax. Executes vanilla Javascript, or use helper libraries like Underscore or Moment.js
+* Don't learn another syntax. Write vanilla Javascript, or use helper libraries like Underscore or Moment.js
 * Formatting is immediately recognizable by programmers coming from .NET, Java and even PHP
 * Provides clear distinction between precompiled (pre-rendered) and post-compiled (bound in the DOM) contexts
 * Built-in template caching
