@@ -118,8 +118,10 @@ EJSpeed has full support for including partials. Partials will automatically inh
 *template-with-partials-and-separate-contexts.html:*
 ```html
 <!-- same partial with different dataset applied -->
-<h1><%= Data.title %></h1>
+<h1>A Tale of Two Worlds</h1>
+<h2>Our World</h2>
 <%= Fn.include('partial.html',theWorld) %>
+<h2>Middle Earth</h2>
 <%= Fn.include('partial.html',middleEarth) %>
 ```
 
