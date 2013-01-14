@@ -1,4 +1,9 @@
-/* version 0.8 */
+/* 
+	EJSpeed | version 0.8 
+	Copyright (c) 2013 Josh Langner | @JoshLangner
+	Based on Embedded Javascript (EJS)
+	Licenced under the MIT Licence.
+*/
 (function() {
 
   	var rsplit = function(string, regex) {
