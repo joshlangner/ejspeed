@@ -1,3 +1,4 @@
+/* version 0.8 */
 (function() {
 
   	var rsplit = function(string, regex) {
