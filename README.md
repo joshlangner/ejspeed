@@ -94,6 +94,8 @@ EJSpeed has full support for including partials. Partials will automatically inh
 <%= Fn.include('partial.html') %>
 ```
 
+#### Example of using same partial with different data:
+
 *Additional JSON data:*
 ```json
 {
