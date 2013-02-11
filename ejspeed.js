@@ -1,9 +1,3 @@
-/* 
-	EJSpeed | version 0.8 
-	Copyright (c) 2013 Josh Langner | @JoshLangner
-	Based on Embedded Javascript (EJS)
-	Licenced under the MIT Licence.
-*/
 (function() {
 
   	var rsplit = function(string, regex) {
@@ -139,15 +133,17 @@
 		return path + (match.test(path) ? '' : this.ext );
 	}
 
-	EJSpeed.Scanner = function(source) {
+	EJSpeed.Scanner = function(source, left, right) {
+
+		//left = left ||
 
 		extend(this, {
-			left_delimiter: '<%',
-			right_delimiter: '%>',
-			double_left: '<%%',
-			double_right: '%%>',
-			left_equal: '<%=',
-			left_comment: '<%#'
+			left_delimiter: left,
+			right_delimiter: right,
+			double_left: left+'%',
+			double_right: '%'+right,
+			left_equal: left+'=',
+			left_comment: left+'#'
 		 })
 
 		this.SplitRegexp = new RegExp('(<%%)|(%%>)|(<%=)|(<%#)|(<%)|(%>\n)|(%>)|(\n)');
@@ -225,7 +221,7 @@
 		}
 	};
 
-	EJSpeed.Compiler = function(source) {
+	EJSpeed.Compiler = function(source, left) {
 		this.pre_cmd = ['var ___ViewO = [];'];
 		this.post_cmd = [];
 		this.source = ' ';	
@@ -241,6 +237,22 @@
 				this.source = "";
 			}
 		}
+
+		left = left || '<%';
+		var right = '%>';
+		switch(left) {
+			case '[%':
+				right = '%]';
+				break;
+			case '{{':
+				right = '}}';
+			case '<%':
+				break;
+			default:
+				throw left+' is not a supported deliminator';
+				break;
+		}
+
 		this.scanner = new EJSpeed.Scanner(this.source);
 		this.out = '';
 	};
@@ -262,42 +274,58 @@
 			};
 
 			this.scanner.scan(function(token, scanner) {
-				if (scanner.stag == null) {					
-					if (token == '\n') {
-						content += '\n';
-						buff.directAssign(put_cmd + '"' + clean(content) + '";');
-						buff.cr();
-						content = '';
-					} else if (token == scanner.left_delimiter || token == scanner.left_equal || token == scanner.left_comment) {
-						scanner.stag = token;
-						if (content.length > 0) {
+				if (scanner.stag == null) {
+					switch(token) {
+						case '\n':
+							content = content + "\n";
 							buff.directAssign(put_cmd + '"' + clean(content) + '";');
-						}
-						content = '';
-					} else if (token == scanner.double_left) {
-						content = content + scanner.left_delimiter;
-					} else {
-						content += token;
-					}
-				} else {
-					if (token == scanner.right_delimiter) {
-						if (scanner.stag == scanner.left_delimiter) {
-							if (content[content.length - 1] == '\n') {
-								content = chop(content);
-								buff.directAssign(content);
-								buff.cr();
-							} else {
-								buff.directAssign(content);
+							buff.cr();
+							content = '';
+							break;
+						case scanner.left_delimiter:
+						case scanner.left_equal:
+						case scanner.left_comment:
+							scanner.stag = token;
+							if (content.length > 0) {
+								buff.directAssign(put_cmd + '"' + clean(content) + '";');
 							}
-						} else if (scanner.stag == scanner.left_equal) {
-							buff.directAssign(insert_cmd + "(EJSpeed.Scanner.to_text(" + content + "));");
-						}					
-						scanner.stag = null;
-						content = '';
-					} else if (token == scanner.double_right) {
-						content = content + scanner.right_delimiter;
-					} else {
-						content = content + token;
+							content = '';
+							break;
+						case scanner.double_left:
+							content = content + scanner.left_delimiter;
+							break;
+						default:
+							content = content + token;
+							break;
+					}
+				}
+				else {
+					switch(token) {
+						case scanner.right_delimiter:
+							switch(scanner.stag) {
+								case scanner.left_delimiter:
+									if (content[content.length - 1] == '\n') {
+										content = chop(content);
+										buff.directAssign(content);
+										buff.cr();
+									}
+									else {
+										buff.directAssign(content);
+									}
+									break;
+								case scanner.left_equal:
+									buff.directAssign(insert_cmd + "(EJSpeed.Scanner.to_text(" + content + "));");
+									break;
+							}
+							scanner.stag = null;
+							content = '';
+							break;
+						case scanner.double_right:
+							content = content + scanner.right_delimiter;
+							break;
+						default:
+							content = content + token;
+							break;
 					}
 				}
 			});
@@ -355,7 +383,7 @@
 		EJSpeed.INVALID_PATH =  -1;
 	};
 
-	EJSpeed.config({cache: true, type: '<', ext: '.html'}); 
+	EJSpeed.config({cache: true, type: '<%', ext: '.html'}); 
 
 	EJSpeed.Helpers = function(data, extras) {
 		this._data = data;
