@@ -21,6 +21,7 @@ A SPEEDY Javascript templating engine based on EJS (http://embeddedjs.com/), ins
 
 * Partials support via "Include", including caching of partials
 * Ability to set data context within partials
+* Supports a variety of template tags, including "<%", "{{", and "[%"
 
 ### On the Roadmap
 
