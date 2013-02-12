@@ -135,8 +135,6 @@
 
 	EJSpeed.Scanner = function(source, left, right) {
 
-		//left = left ||
-
 		extend(this, {
 			left_delimiter: left,
 			right_delimiter: right,
@@ -144,9 +142,9 @@
 			double_right: '%'+right,
 			left_equal: left+'=',
 			left_comment: left+'#'
-		 })
+		})
 
-		this.SplitRegexp = new RegExp('(<%%)|(%%>)|(<%=)|(<%#)|(<%)|(%>\n)|(%>)|(\n)');
+		this.SplitRegexp = new RegExp('('+this.double_left+')|('+this.double_right+')|('+this.left_equal+')|('+this.left_comment+')|('+this.left_delimiter+')|('+this.right_delimiter+'\n)|('+this.right_delimiter+')|(\n)');
 
 		this.source = source;
 		this.stag = null;
@@ -253,7 +251,7 @@
 				break;
 		}
 
-		this.scanner = new EJSpeed.Scanner(this.source);
+		this.scanner = new EJSpeed.Scanner(this.source, left, right);
 		this.out = '';
 	};
 
