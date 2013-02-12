@@ -21,7 +21,7 @@ A SPEEDY Javascript templating engine based on EJS (http://embeddedjs.com/), ins
 
 * Partials support via "Include", including caching of partials
 * Ability to set data context within partials
-* Supports a variety of template tags, including "<%", "{{", and "[%"
+* Supports a variety of template tags, including `<%`, `{{`, and `[%`. Default is `<%`.
 
 ### On the Roadmap
 
@@ -151,4 +151,10 @@ Full JS syntax support means being able to use other libraries within your preco
 In your Javascript code before calling `new EJSpeed()`, add the following config option:
 ```javascript
 EJSpeed.config({cache: false})
+```
+
+#### Use a different template tag
+In your Javascript code before calling `new EJSpeed()`, add the following config option:
+```javascript
+EJSpeed.config({cache: false, type: '{{'}) // enable mustache-style tags
 ```
