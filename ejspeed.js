@@ -51,16 +51,15 @@
 		if (options.element) {
 			if (typeof options.element == 'string') {
 				var name = options.element
-				options.element = document.getElementById( options.element);
+				options.element = document.getElementById(options.element);
 				if (options.element == null) throw name+'does not exist!';
 			}
 			if (options.element.value) {
 				this.text = options.element.value;
-			}else{
+			} else {
 				this.text = options.element.innerHTML;
 			}
 			this.name = options.element.id;
-			this.type = '[';
 		} else if (options.url) {
 			options.url = EJSpeed.endExt(options.url, this.extMatch);
 			this.name = this.name ? this.name : options.url;
