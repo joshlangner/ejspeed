@@ -14,20 +14,21 @@ A SPEEDY Javascript templating engine based on EJS (http://embeddedjs.com/), ins
 
 * Don't learn another syntax. Write vanilla Javascript, or use helper libraries like Underscore or Moment.js
 * Formatting is immediately recognizable by programmers coming from .NET, Java and even PHP
-* Provides clear distinction between precompiled (pre-rendered) and post-compiled (bound in the DOM) contexts
+* Provides clear and useful distinction between precompiled (pre-rendered) and post-compiled (bound / live in the DOM) contexts
 * Built-in template caching
+* Works great as a "logicless" templating engine - *How you use it is up to you.* 
 
 ## Other Features
 
 * Partials support via "Include", including caching of partials
 * Ability to set data context within partials
 * Supports a variety of template tags, including `<%`, `{{`, and `[%`. Default is `<%`.
+* Built-in template loading, or use pre-served elements (see example)
 
 ### On the Roadmap
 
-* Add an option to make logicless - boost performance 2x-5x or more, but lose the capability to execute JS code
-* Make it strict-mode compatible
-* Add more robust, per-line-per-template logging
+* Make it strict-mode compatible?
+* Add more robust, per-line-per-template debugging
 
 ## Basic setup
 
@@ -70,6 +71,27 @@ A SPEEDY Javascript templating engine based on EJS (http://embeddedjs.com/), ins
 ```javascript
 // Using jQuery
 $('#stage').html(new EJSpeed ({url: 'template.html'}).render(theWorld));
+```
+
+#### Using pre-served elements: 
+Instead of loading templates externally, you can also refer to elements pre-served up in your markup / in the HTML. You can use any element, but the example provided puts it inside a `script` tag.
+
+*instead of template.html:*
+```html
+<script type="text/ejspeed" id="regionsTemplate">
+<h1><%= Data.title %></h1>
+<ul>
+  <% for (var i, len = Data.regions.length; i < len; i++) { %>
+		<li><%= Data.regions[i] %></li>
+	<% } %>
+</ul>
+</script>
+```
+
+*default2.js:*
+```javascript
+// Using jQuery
+$('#stage').html(new EJSpeed ({element: 'regionsTemplate'}).render(theWorld));
 ```
 
 
@@ -131,7 +153,9 @@ EJSpeed has full support for including partials. Partials will automatically inh
 
 ## Full JS syntax support
 
-Full JS syntax support means being able to use other libraries within your precompiled code. Examples might be D3.js, Underscore.js, and more. 
+Full JS syntax support is a big feature of EJSpeed, not only because you have the ability to write more robust templates or do complex string manipulation, but it also means being able to use other libraries such as D3.js, Moment.js, or Underscore.js in a 'prerender' context in client-side applications. 
+
+The best part about EJSpeed is that it does all of this *as fast as, and in some cases faster than, most "logicless" template engines.* 
 
 #### Example (using Underscore.js):
 
