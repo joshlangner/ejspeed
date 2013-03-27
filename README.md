@@ -33,7 +33,7 @@ A SPEEDY Javascript templating engine based on EJS (http://embeddedjs.com/), ins
 ## Basic setup
 
 *JSON data:*
-```json
+```javascript
 var theWorld = {
     "theWorld": {
         "title": "Hello World",
