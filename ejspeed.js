@@ -1,4 +1,4 @@
-(function() {
+;(function() {
 
   	var rsplit = function(string, regex) {
   		
