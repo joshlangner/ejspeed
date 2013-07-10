@@ -4,7 +4,9 @@ A SPEEDY, standalone Javascript templating engine based on EJS (http://embeddedj
 
 ## Fast
 
-* TL/DR - Benchmarks: (http://jsperf.com/dom-vs-innerhtml-based-templating/614)
+* TL/DR - Benchmarks: 
+  * 1.0.1 http://jsperf.com/dom-vs-innerhtml-based-templating/773
+  * 1.0.0 http://jsperf.com/dom-vs-innerhtml-based-templating/614
 * 10x faster than the original EJS
 * Ranks with or beats the most popular including Mustache, Handlebars, Dust, and Hogan
 * Outperforms most on older versions of IE, including 8 and 7
