@@ -1,3 +1,12 @@
+/* ==========================================================
+ * EJSpeed - v1.0.0
+ * https://github.com/joshlangner/ejspeed
+ * A SPEEDY Javascript templating engine based on EJS (http://embeddedjs.com/)
+ * ==========================================================
+ * Copyright (c) 2012-2013 @joshlangner
+ * MIT LICENSED
+ * ========================================================== */
+ 
 ;(function() {
 
   	var rsplit = function(string, regex) {
@@ -151,15 +160,9 @@
 	};
 
 	EJSpeed.Scanner.to_text = function(input) {
-		if (input == null || input === undefined) {
-			return '';
-		}
-		if (input instanceof Date) {
-			return input.toDateString();
-		}
-		if (input.toString) {
-			return input.toString();
-		}
+		if (input == null || input === undefined) return '';
+		if (input instanceof Date) return input.toDateString();
+		if (input.toString) return ''+input;
 		return '';
 	};
 
@@ -397,7 +400,7 @@
 		to_text: function(input, null_text) {
 			if (input == null || input === undefined) return null_text || '';
 			if (input instanceof Date) return input.toDateString();
-			if (input.toString) return input.toString().replace(/\n/g, '<br />').replace(/''/g, "'");
+			if (input.toString) return ''+input.replace(/\n/g, '<br />').replace(/''/g, "'");
 			return '';
 		},
 		include: function(options, data) {
