@@ -1,6 +1,6 @@
 EJSpeed
 ========
-A SPEEDY Javascript templating engine based on EJS (http://embeddedjs.com/), inspired by Rails' ERB (http://ruby-doc.org/stdlib-1.9.3/libdoc/erb/rdoc/ERB.html).
+A SPEEDY, standalone Javascript templating engine based on EJS (http://embeddedjs.com/), inspired by Rails' ERB (http://ruby-doc.org/stdlib-1.9.3/libdoc/erb/rdoc/ERB.html).
 
 ## Fast
 
@@ -24,6 +24,7 @@ A SPEEDY Javascript templating engine based on EJS (http://embeddedjs.com/), ins
 * Ability to set data context within partials
 * Supports a variety of template tags, including `<%`, `{{`, and `[%`. Default is `<%`.
 * Built-in template loading, or use pre-served elements (see example)
+* Standalone - Not dependent on any other libraries
 
 ### On the Roadmap
 
