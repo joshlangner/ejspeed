@@ -14,9 +14,9 @@ A SPEEDY, standalone Javascript templating engine based on EJS (http://embeddedj
 
 ## Logical
 
-* Don't learn another syntax. Write vanilla Javascript, or use helper libraries like Underscore or Moment.js
-* Formatting is immediately recognizable by programmers coming from .NET, Java and even PHP
-* Provides clear and useful distinction between precompiled (pre-rendered) and post-compiled (bound / live in the DOM) contexts
+* Don't learn another syntax. Write vanilla Javascript, or use external libraries like Underscore or Moment.js directly within templates
+* ERB-style templating is similar to traditional server-side templating from .NET, Java and even PHP
+* Provides useful distinction between precompiled (pre-rendered) and post-compiled (bound / live in the DOM) contexts
 * Built-in template caching
 * Works great as a "logicless" templating engine - *How you use it is up to you.* 
 
@@ -30,8 +30,10 @@ A SPEEDY, standalone Javascript templating engine based on EJS (http://embeddedj
 
 ### On the Roadmap
 
+* Implement ASM.js version for improved performance
+* Explore possible use of web workers for multi-threading & async
 * Make it strict-mode compatible?
-* Add more robust, per-line-per-template debugging
+* Improve logging and debugging
 
 ## Basic setup
 
