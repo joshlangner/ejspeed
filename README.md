@@ -59,7 +59,7 @@ var theWorld = {
 ```html
 <h1><%= Data.title %></h1>
 <ul>
-  <% for (var i, len = Data.regions.length; i < len; i++) { %>
+  <% for (var i = 0, len = Data.regions.length; i < len; i++) { %>
 		<li><%= Data.regions[i] %></li>
 	<% } %>
 </ul>
