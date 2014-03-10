@@ -86,7 +86,7 @@ Instead of loading templates externally, you can also refer to elements pre-serv
 <script type="text/ejspeed" id="regionsTemplate">
 <h1><%= Data.title %></h1>
 <ul>
-  <% for (var i, len = Data.regions.length; i < len; i++) { %>
+  <% for (var i = 0, len = Data.regions.length; i < len; i++) { %>
 		<li><%= Data.regions[i] %></li>
 	<% } %>
 </ul>
@@ -109,7 +109,7 @@ EJSpeed has full support for including partials. Partials will automatically inh
 *partial.html:*
 ```html
 <ul>
-	<% for (var i, len = Data.regions.length; i < len; i++) { %>
+	<% for (var i = 0, len = Data.regions.length; i < len; i++) { %>
 		<li><%= Data.regions[i] %></li>
 	<% } %>
 </ul>
