@@ -1,9 +1,9 @@
 /* ==========================================================
- * EJSpeed - v1.0.1
+ * EJSpeed - v1.0.2
  * https://github.com/joshlangner/ejspeed
  * A SPEEDY Javascript templating engine based on EJS (http://embeddedjs.com/)
  * ==========================================================
- * Copyright (c) 2012-2013 @joshlangner
+ * Copyright (c) 2012-2014 @joshlangner
  * MIT LICENSED
  * ========================================================== */
  

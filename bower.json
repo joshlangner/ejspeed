@@ -1,0 +1,19 @@
+{
+  "name": "ejspeed",
+  "description": "A SPEEDY, standalone Javascript templating engine based on EJS, inspired by Rails' ERB.",
+  "version": "1.0.2",
+  "keywords": [
+    "js",
+    "template-engine",
+    "front-end",
+    "framework",
+    "web"
+  ],
+  "homepage": "https://github.com/joshlangner/ejspeed",
+  "main": [
+    "ejspeed.js"
+  ],
+  "ignore": [
+    "/.*"
+  ]
+}
