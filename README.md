@@ -100,6 +100,21 @@ $('#stage').html(new EJSpeed ({element: 'regionsTemplate'}).render(theWorld));
 ```
 
 
+#### Using a string as a template: 
+You can also load or create your own templates external to EJSpeed, and then have EJSpeed compile them. In the EJSpeed options, just specify your Javascript string / variable using the "text" parameter. For example:
+
+*default3.js:*
+```javascript
+var myTemplate = '<h1><%= Data.title %></h1><ul><% for (var i = 0, len = Data.regions.length; i < len; i++) { %><li><%= Data.regions[i] %></li><% } %></ul>';
+
+// Using jQuery
+$('#stage').html(new EJSpeed ({text: myTemplate}).render(theWorld));
+
+// or
+$('#stage').html(new EJSpeed ({text: '<h1><%= Data.title %></h1>'}).render(theWorld));
+```
+
+
 ## Includes & Partials
 
 EJSpeed has full support for including partials. Partials will automatically inherit the data contexts of their parents, or you can explicitly set what data is scoped within the partial.
